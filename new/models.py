@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
-
+from django.urls import reverse
 User = get_user_model()
 
 
@@ -59,6 +59,9 @@ class Post(models.Model):
         return (
             self.author.user.username, self.rating, self.preview, self.publication_date
         )
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 
 
 class Comment(models.Model):

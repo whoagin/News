@@ -8,7 +8,7 @@ Products
 
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-<h1>Новость {{new.title}}</h1>
+<h1>{{ new.get_article_or_news_display }} {{new.title}}</h1>
 Дата публикации: {{new.publication_date|date:'d.M.Y'}}<br>
 <hr>
 {{new.text|censure_text}}
