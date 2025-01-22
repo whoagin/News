@@ -32,7 +32,10 @@ News
 {% else %}
 <h2>Новостей нет!</h2>
 {% endif %}
-
+    {% if is_not_author %}
+        <button><a href="sign/upgrade/">Стать автором!</a></button>
+    {% endif %}
+    <br><br><br><hr>
 {# Добавляем пагинацию на страницу #}
 
 {# Информация о предыдущих страницах #}

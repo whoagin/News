@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -24,6 +25,7 @@ class PostListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
         return context
 
 
@@ -53,7 +55,8 @@ class PostDetailView(DetailView):
     context_object_name = 'new'
 
 
-class PostCreate(CreateView):
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('new.add_post', )
     form_class = PostForm
     model = Post
     template_name = 'edit_new.html'
@@ -65,7 +68,8 @@ class PostCreate(CreateView):
         return super().form_valid(form)
 
 
-class ArticleCreate(CreateView):
+class ArticleCreate(PermissionRequiredMixin,CreateView):
+    permission_required = ('new.add_post',)
     form_class = PostForm
     model = Post
     template_name = 'edit_new.html'
@@ -77,25 +81,29 @@ class ArticleCreate(CreateView):
         return super().form_valid(form)
 
 
-class PostUpdate(UpdateView):
+class PostUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('new.change_post',)
     form_class = PostForm
     model = Post
     template_name = 'edit_new.html'
 
 
-class ArticleUpdate(UpdateView):
+class ArticleUpdate(PermissionRequiredMixin,UpdateView):
+    permission_required = ('new.change_post',)
     form_class = PostForm
     model = Post
     template_name = 'edit_new.html'
 
 
-class PostDelete(DeleteView):
+class PostDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('new.delete_post',)
     model = Post
     template_name = 'delete_new.html'
     success_url = reverse_lazy('news_list')
 
 
-class ArticleDelete(DeleteView):
+class ArticleDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('new.delete_post',)
     model = Post
     template_name = 'delete_new.html'
     success_url = reverse_lazy('news_list')
